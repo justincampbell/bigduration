@@ -1,19 +1,17 @@
 package bigduration
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 	"time"
 )
 
+// Additional time.Duration constants
 const (
-	minute = 1
-	hour   = minute * 60
-	day    = hour * 24
-	week   = day * 7
-	month  = day * 30
-	year   = day * 365
+	Day   = time.Hour * 24
+	Week  = Day * 7
+	Month = Day * 30
+	Year  = Day * 365
 )
 
 // ParseDuration takes a string in the same format as time.ParseDuration, but
@@ -44,23 +42,21 @@ func ParseDuration(s string) (time.Duration, error) {
 		return nilDuration, err
 	}
 
-	minutes := years*year + months*month + weeks*week + days*day
-
-	add, err := time.ParseDuration(fmt.Sprintf("%0dm", minutes))
-	if err != nil {
-		return nilDuration, err
-	}
+	big := time.Duration(years)*Year +
+		time.Duration(months)*Month +
+		time.Duration(weeks)*Week +
+		time.Duration(days)*Day
 
 	if s == "" {
-		return add, nil
+		return big, nil
 	}
 
-	d, err := time.ParseDuration(s)
+	little, err := time.ParseDuration(s)
 	if err != nil {
 		return nilDuration, err
 	}
 
-	return d + add, nil
+	return big + little, nil
 }
 
 func splitDuration(s string, delim string) (string, int, error) {
