@@ -16,6 +16,14 @@ const (
 	year   = day * 365
 )
 
+// ParseDuration takes a string in the same format as time.ParseDuration, but
+// also supports additonal duration suffixes:
+//
+//   D day
+//   W week
+//   M month
+//   Y year
+//
 func ParseDuration(s string) (time.Duration, error) {
 	var nilDuration time.Duration
 
